@@ -29,9 +29,11 @@ class ExpenseRepository
             $query->where('date', '<=', $endDate);
         }
 
-        if (!empty($sortBy) && in_array($sortBy, ['date', 'title', 'category', 'amount'])) {
+        if (!empty($sortBy) && in_array($sortBy, ['user', 'date', 'title', 'category', 'amount'])) {
             if ($sortBy === 'category') {
                 $sortBy = 'category_label';
+            } else if ($sortBy === 'user') {
+                $sortBy = 'user_name';
             }
 
             $query->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');

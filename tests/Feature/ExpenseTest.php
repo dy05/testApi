@@ -2,7 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Enums\Category;
+//use App\Enums\Category as CategoryEnum;
+use App\Models\Category;
 use App\Models\Expense;
 use App\Models\User;
 use App\Repositories\ExpenseRepository;
@@ -31,8 +32,9 @@ class ExpenseTest extends TestCase
             'user_id',
             'title',
             'amount',
-            'date',
-            'category'
+//            'category',
+            'category_id',
+            'date'
         ]);
     }
 
@@ -40,7 +42,8 @@ class ExpenseTest extends TestCase
     {
         $response = $this->post('/api/expenses', [
             'date' => '12/11/2026',
-            'category' => Category::OFFICE->value,
+//            'category' => CategoryEnum::OFFICE->value,
+            'category_id' => Category::factory()->create()->id,
             'user_id' => 1,
             'amount' => 24,
             'title' => 'New expense'
@@ -52,7 +55,8 @@ class ExpenseTest extends TestCase
         ]);
 
         $response->assertJsonMissingValidationErrors([
-            'category',
+//            'category',
+            'category_id',
             'amount',
             'title',
         ]);
@@ -62,7 +66,8 @@ class ExpenseTest extends TestCase
     {
         $response = $this->post('/api/expenses', [
             'date' => '2026-10-10',
-            'category' => 'value',
+//            'category' => 'value',
+            'category_id' => 0,
             'user_id' => 1,
             'amount' => 24,
             'title' => 'New expense'
@@ -70,7 +75,8 @@ class ExpenseTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors([
-            'category'
+//            'category'
+            'category_id'
         ]);
 
         $response->assertJsonMissingValidationErrors([
@@ -85,10 +91,12 @@ class ExpenseTest extends TestCase
         $expensesCount = Expense::query()->count();
         /** @var User $user */
         $user = User::factory()->create();
+        $category = Category::query()->create(['label' => 'category 1']);
 
         $response = $this->post('/api/expenses', [
             'date' => '2026-10-10',
-            'category' => Category::OTHER->value,
+//            'category' => Category::OTHER->value,
+            'category_id' => $category->id,
             'user_id' => $user->id,
             'amount' => 24,
             'title' => 'New expense'
@@ -181,11 +189,13 @@ class ExpenseTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
+        $category = Category::query()->create(['label' => 'category 1']);
 
         Expense::query()
             ->create([
                 'date' => !empty($date1) ? $date1 : '2026-10-10',
-                'category' => Category::OTHER->value,
+//                'category' => CategoryEnum::OTHER->value,
+                'category_id' => $category->id,
                 'user_id' => $user->id,
                 'amount' => $amount1,
                 'title' => 'New expense'
@@ -195,7 +205,8 @@ class ExpenseTest extends TestCase
         Expense::query()
             ->create([
                 'date' => !empty($date2) ? $date2 : '2026-10-10',
-                'category' => Category::OTHER->value,
+//                'category' => CategoryEnum::OTHER->value,
+                'category_id' => $category,
                 'user_id' => !empty($user1) ? $user1->id : $user->id,
                 'amount' => $amount2,
                 'title' => 'New expense'

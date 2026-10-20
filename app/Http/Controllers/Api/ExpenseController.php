@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\Category;
+//use App\Enums\Category as CategoryEnum;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Repositories\ExpenseRepository;
 use Carbon\Carbon;
@@ -34,29 +35,36 @@ class ExpenseController extends Controller
             'data' => $this->expenseRepository->find(
                 $request->input('user_id'),
                 $from,
-                $to
+                $to,
+                $request->input('per_page'),
+                $request->input('sort_by'),
+                $request->input('sort_desc', 1) == 1,
             ),
         ]);
     }
 
     public function store(Request $request)
     {
-        $allowedCategories = collect(Category::cases())
-            ->pluck('value')
-            ->toArray();
+//        $allowedCategories = collect(Category::cases())
+//            ->pluck('value')
+//            ->toArray();
 
         $dateFormat = 'Y-m-d';
 
         $request->validate([
             'title' => ['required'],
             'amount' => ['required', 'numeric'],
-            'category' => ['required', 'in:' . join(',', $allowedCategories)],
+//            'category' => ['required', 'in:' . join(',', $allowedCategories)],
+            'category_id' => ['required', 'exists:categories,id'],
             'user_id' => ['required', 'exists:users,id'],
             'date' => ['required', Rule::date()->format($dateFormat)],
         ]);
 
         $date = Carbon::createFromFormat($dateFormat, $request->input('date'));
-        $category = Category::from($request->input('category'));
+//        $category = CategoryEnum::from($request->input('category'));
+        $category = Category::query()
+            ->where('id', '=', $request->input('category_id'))
+            ->first();
 
         try {
             $expense = $this->expenseRepository->store(

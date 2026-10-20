@@ -47,4 +47,17 @@ class ExpenseRepository
             ->groupBy(['category'])
             ->get();
     }
+
+    public function summary(?int $id): Collection
+    {
+        if (empty($id)) {
+            return collect();
+        }
+
+        return Expense::query()
+            ->where('user_id', '=', $id)
+            ->selectRaw('ROUND(SUM(amount), 2) as total_amount, ROUND(AVG(amount), 0) average, category')
+            ->groupBy(['category'])
+            ->get();
+    }
 }

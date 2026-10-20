@@ -2,19 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Contracts\IBaseRepository;
 use App\Enums\Category;
 use App\Models\Expense;
 use DateTime;
 use Illuminate\Support\Collection;
 
-class ExpenseRepository implements IBaseRepository
+class ExpenseRepository
 {
-    public function all(): Collection
-    {
-        return Expense::all();
-    }
-
     public function find(?int $userId = null, ?string $startDate = null, ?string $endDate = null): Collection
     {
         $query = Expense::query();

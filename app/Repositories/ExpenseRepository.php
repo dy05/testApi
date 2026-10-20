@@ -14,7 +14,8 @@ class ExpenseRepository
     public function find(?int $userId = null, ?string $startDate = null, ?string $endDate = null, ?int $perPage = 10, ?string $sortBy = null, bool $sortDesc = true): LengthAwarePaginator
     {
         $query = Expense::query()
-            ->withAggregate('category', 'label');
+            ->withAggregate('category', 'label')
+            ->withAggregate('user', 'name');
 
         if (!empty($userId)) {
             $query->where('user_id', '=', $userId);

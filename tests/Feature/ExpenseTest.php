@@ -176,7 +176,7 @@ class ExpenseTest extends TestCase
 
         $response->assertJsonCount(1, 'data.data');
 
-        /** @var User $user2 */
+    /** @var User $user2 */
         $user2 = User::factory()->create();
         $response = $this->get('/api/expenses?' . http_build_query([
             'user_id' => $user2->id,

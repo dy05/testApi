@@ -128,36 +128,36 @@ class ExpenseTest extends TestCase
             'from' => '2026-06-11'
         ]));
 
-        $response->assertJsonCount(1, 'data');
+        $response->assertJsonCount(1, 'data.data');
 
         $response = $this->get('/api/expenses?' . http_build_query([
             'from' => '2026-08-11'
         ]));
 
-        $response->assertJsonCount(0, 'data');
+        $response->assertJsonCount(0, 'data.data');
 
         $response = $this->get('/api/expenses?' . http_build_query([
             'to' => '2026-06-11'
         ]));
 
-        $response->assertJsonCount(1, 'data');
+        $response->assertJsonCount(1, 'data.data');
 
         $response = $this->get('/api/expenses?' . http_build_query([
             'to' => '2026-02-11'
         ]));
 
-        $response->assertJsonCount(0, 'data');
+        $response->assertJsonCount(0, 'data.data');
 
         $response = $this->get('/api/expenses?' . http_build_query([
             'to' => '2026-12-11',
             'from' => '2026-02-11'
         ]));
 
-        $response->assertJsonCount(2, 'data');
+        $response->assertJsonCount(2, 'data.data');
 
         $response = $this->get('/api/expenses');
 
-        $response->assertJsonCount(2, 'data');
+        $response->assertJsonCount(2, 'data.data');
     }
 
 
@@ -168,13 +168,13 @@ class ExpenseTest extends TestCase
         $this->createExpenses(user1: $user1);
 
         $response = $this->get('/api/expenses');
-        $response->assertJsonCount(2, 'data');
+        $response->assertJsonCount(2, 'data.data');
 
         $response = $this->get('/api/expenses?' . http_build_query([
             'user_id' => $user1->id,
         ]));
 
-        $response->assertJsonCount(1, 'data');
+        $response->assertJsonCount(1, 'data.data');
 
         /** @var User $user2 */
         $user2 = User::factory()->create();
@@ -182,7 +182,7 @@ class ExpenseTest extends TestCase
             'user_id' => $user2->id,
         ]));
 
-        $response->assertJsonCount(0, 'data');
+        $response->assertJsonCount(0, 'data.data');
     }
 
     public function createExpenses(int $amount1 = 23, int $amount2 = 34, ?string $date1 = null, ?string $date2 = null, ?User $user1 = null): void
@@ -206,7 +206,7 @@ class ExpenseTest extends TestCase
             ->create([
                 'date' => !empty($date2) ? $date2 : '2026-10-10',
 //                'category' => CategoryEnum::OTHER->value,
-                'category_id' => $category,
+                'category_id' => $category->id,
                 'user_id' => !empty($user1) ? $user1->id : $user->id,
                 'amount' => $amount2,
                 'title' => 'New expense'

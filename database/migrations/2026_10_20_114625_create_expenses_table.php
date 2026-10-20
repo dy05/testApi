@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->decimal('amount');
-            $table->enum('category', $allowedCategories);
+            $table->enum('category', $allowedCategories)->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('date');
         });

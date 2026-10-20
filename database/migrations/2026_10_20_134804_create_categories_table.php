@@ -19,7 +19,10 @@ return new class extends Migration
         });
 
         Schema::table('expenses', function (Blueprint $table) {
-//            $table->dropColumn('category');
+            if (config('app.env' === 'testing')) {
+                $table->dropColumn(['category']);
+            }
+//            $table->dropColumn(['category']);
             $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
         });
     }

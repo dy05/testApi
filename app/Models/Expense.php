@@ -15,10 +15,6 @@ class Expense extends Model
 
     public $timestamps = false;
 
-    protected $with = [
-        'category'
-    ];
-
     protected function casts(): array
     {
         return [

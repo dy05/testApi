@@ -40,7 +40,7 @@ class ExpenseRepository
             ]);
     }
 
-    public function getStats()
+    public function getStats(): Collection
     {
         return Expense::query()
             ->selectRaw('ROUND(SUM(amount), 2) as total_amount, category')

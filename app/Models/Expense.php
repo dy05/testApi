@@ -6,10 +6,13 @@ use App\Enums\Category as CategoryEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['title', 'amount', 'category', 'user_id', 'date', 'category_id'])]
 class Expense extends Model
 {
+    use SoftDeletes;
+
     public $timestamps = false;
 
     protected $with = [

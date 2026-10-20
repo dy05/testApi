@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\ExpenseRepository;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -13,7 +12,7 @@ class UserController extends Controller
     ) {
     }
 
-    public function summary(int $id, Request $request)
+    public function summary(int $id)
     {
         return response()->json([
             'data' => $this->expenseRepository->summary($id)

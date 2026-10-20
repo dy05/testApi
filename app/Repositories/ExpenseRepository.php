@@ -15,12 +15,20 @@ class ExpenseRepository implements IBaseRepository
         return Expense::all();
     }
 
-    public function find(?int $userId = null): Collection
+    public function find(?int $userId = null, ?string $startDate = null, ?string $endDate = null): Collection
     {
         $query = Expense::query();
 
         if (!empty($userId)) {
             $query->where('user_id', '=', $userId);
+        }
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
         }
 
         return $query->get();

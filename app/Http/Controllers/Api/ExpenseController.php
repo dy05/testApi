@@ -20,8 +20,22 @@ class ExpenseController extends Controller
 
     public function index(Request $request)
     {
+        $dateFormat = 'Y-m-d';
+
+        $request->validate([
+            'from' => ['nullable', Rule::date()->format($dateFormat)],
+            'to' => ['nullable', Rule::date()->format($dateFormat)],
+        ]);
+
+        $from = $request->input('from');
+        $to = $request->input('to');
+
         return response()->json([
-            'data' => $this->expenseRepository->find($request->input('user_id')),
+            'data' => $this->expenseRepository->find(
+                $request->input('user_id'),
+                $from,
+                $to
+            ),
         ]);
     }
 
